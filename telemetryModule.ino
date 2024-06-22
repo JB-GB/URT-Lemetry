@@ -6,18 +6,20 @@ int loraRX = 6; // Declarar el pin de Recibo de datos LORA
 int loraTX = 7; // Declarar el pin de Envio de datos LORA
 int gpsRX = 8; // Declarar el pin de Recibo de datos GPS
 int gpsTX = 9; // Declarar el pin de Envio de datos GPS
-
+int dpTS1 = ; // Data Pin Temperature Sensor 1 
+int dpTS2 = ; // Data Pin Temperature Sensor 2
+int dpTS3 = ; // Data Pin Temperature Sensor 3
 /////////////////////////////
 
 /////////////////////////////
 /* Variables publicas */
-
-
+int rpmVal, ts1, ts2, ts3;
+String latlonGPS, fPacket;
 /////////////////////////////
 
 /////////////////////////////
 /* Definicion de funciones */
-SoftwareSerial gpstest(rxPin, txPin);
+SoftwareSerial lora(loraRX, loraTX);
 int getRPM();
 float getTS1();
 float getTS2();
@@ -34,11 +36,11 @@ void setup() {  // Inicializacion del dispositivo
   }
   Serial.println("Serial de la computadora iniciado");
 
-  gpstest.begin(9600);
-  while(!gpstest){
+  lora.begin(9600); // Necesitamos verificar el data rate sea de 115200 baudios
+  while(!lora){
     ;
   }
-  gpstest.println("Serial de software iniciado");
+  Serial.println("Serial de software iniciado");
   
 }
 
@@ -51,7 +53,8 @@ void loop() { // Superbucle
     
     - Patron de eventos:
       1. Recibir los datos con getRPM
-
+      2. Recibir los datos de los 3 sensores de temperatura
+      3. Recibir el string del getNMEA
   */
   
   // Crea el paquete unto de datos a enviar
@@ -61,7 +64,6 @@ void loop() { // Superbucle
   uploadLoRa(fPacket);
   uploadMEM(fPacket);
   
-
   //Texto de ejemplo:
   if(Serial.available()){
     gpstest.println(Serial.read());
@@ -97,8 +99,7 @@ String getNMEA(){ // Funcion para extraer los datos NMEA que necesitamos del GPS
 }
 
 void uploadLoRa(String fPL){  // Funcion para publicar al modulo de radio a travez de Serial simulado el paquete final
-
-  // loraSerial.println(fPL);
+  // lora.println(fPL);
 }
 
 void uploadMEM(String fPM){ // Funcion para publicar al modulo de almacenamiento local
