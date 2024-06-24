@@ -99,7 +99,7 @@ String getNMEA(){ // Funcion para extraer los datos NMEA que necesitamos del GPS
 }
 
 void uploadLoRa(String fPL){  // Funcion para publicar al modulo de radio a travez de Serial simulado el paquete final
-  // lora.println(fPL);
+  lora.println(fPL);
 }
 
 void uploadMEM(String fPM){ // Funcion para publicar al modulo de almacenamiento local
