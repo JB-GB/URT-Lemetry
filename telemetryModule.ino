@@ -4,27 +4,24 @@
 /* Definicion de pines */
 int loraRX = 6; // Declarar el pin de Recibo de datos LORA
 int loraTX = 7; // Declarar el pin de Envio de datos LORA
-int gpsRX = 8; // Declarar el pin de Recibo de datos GPS
-int gpsTX = 9; // Declarar el pin de Envio de datos GPS
-int dpTS1 = ; // Data Pin Temperature Sensor 1 
-int dpTS2 = ; // Data Pin Temperature Sensor 2
-int dpTS3 = ; // Data Pin Temperature Sensor 3
+int tachPin = ; //  Declara el pin de datos del sensor inductivo anclado a la flecha
+int accel1 = ; // Data Pin accelerometer Sensor 1 (Check I2C)
+int accel2 = ; // Data Pin accelerometer Sensor 2 (Check I2C)
+int accel3 = ; // Data Pin accelerometer Sensor 3 (Check I2C)
+int accel4 = ; // Data Pin accelerometer Sensor 4 (Check I2C)
+int engTemp = ; // Data pin engine temperature sensor
+int brkTemp = ; // Data pin brakes temperature sensor
 /////////////////////////////
 
 /////////////////////////////
 /* Variables publicas */
-int rpmVal, ts1, ts2, ts3;
+int rpmVal,;
 String latlonGPS, fPacket;
 /////////////////////////////
 
 /////////////////////////////
 /* Definicion de funciones */
 SoftwareSerial lora(loraRX, loraTX);
-int getRPM();
-float getTS1();
-float getTS2();
-float getTS3();
-String getNMEA();
 void uploadLoRa(String fPL);
 void uploadMEM(String fPM);
 /////////////////////////////
@@ -42,13 +39,14 @@ void setup() {  // Inicializacion del dispositivo
   }
   Serial.println("Serial de software iniciado");
   
+  // Configurar el sim808 con AT+CGNSSEQ=RMC (TIME,DATE,POSITION,COURSE,SPEED)
 }
 
 void loop() { // Superbucle
   
   /*
-    - Paquete de ejemplo  (Max packet size: 39 bytes)
-    RPM, tempSensor1, tempSensor2, tempSensor3, Latitud, Longitud
+    - Paquete de ejemplo  
+    RPM, accel1, accel2, accel3, accel4, engTemp, brkTemp;
     2500,149,178,165,25.2525252,31.31313113
     
     - Patron de eventos:
@@ -58,45 +56,13 @@ void loop() { // Superbucle
   */
   
   // Crea el paquete unto de datos a enviar
-  fPacket = String(getRPM()) + String(getTS1()) + String(getTS2()) + String(getTS3()) + getNMEA();
+  fPacket = String(); // 
 
   // Envia el paquete a funciones de envio
-  uploadLoRa(fPacket);
-  uploadMEM(fPacket);
-  
-  //Texto de ejemplo:
-  if(Serial.available()){
-    gpstest.println(Serial.read());
-  }
-  if(gpstest.available()){
-    Serial.println(gpstest.read());
-  } 
+  uploadLoRa(fPacket);  // Sendin LoRa packets | Envío a LoRa
+  uploadMEM(fPacket);   // Local memory data upload | Almacenado local de información
 }
 
-int getRPM(){ // Funcion para extraer mediante <Metodo aun no definido> las revoluciones del vehiculo
-
-  return rpmVal; //Devolviendo variable con nombre generico
-}
-
-float getTS1(){ // Funcion para extraer el valor del sensor de temperatura 1
-
-  return ts1; //Devolviendo variable con nombre generico
-}
-
-float getTS2(){ // Funcion para extraer el valor del sensor de temperatura 2
-
-  return ts2; //Devolviendo variable con nombre generico
-}
-
-float getTS3(){ // Funcion para extraer el valor del sensor de temperatura 3
-
-  return ts3; //Devolviendo variable con nombre generico
-}
-
-String getNMEA(){ // Funcion para extraer los datos NMEA que necesitamos del GPS
-
-  return latlonGPS; //Devolviendo variable con nombre generico
-}
 
 void uploadLoRa(String fPL){  // Funcion para publicar al modulo de radio a travez de Serial simulado el paquete final
   // lora.println(fPL);
