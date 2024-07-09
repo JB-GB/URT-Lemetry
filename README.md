@@ -6,4 +6,4 @@ We expect to create hardware and software based on standard components to provid
 
 ---
 #### Concept (Main idea)
-![Pickup](resources/muckMainIdea.png)
+![Pickup](resources/muckMainIdea.jpg)
